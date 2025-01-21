@@ -1,0 +1,91 @@
+{% include 'layout.html' %}
+
+<div class="container mt-5">
+  <h3>Add input to chat with personal Chatbot</h3>
+  <div>
+    <div class="card text-center mt-3">
+      <div class="card-header">Chat History:</div>
+      <div class="card-body chat-history" id="chatHistory">
+        <!-- auto populate here-->
+        {% for response in chat_responses %}
+        <div
+          class="{{ 'chat-message user-input' if loop.index0 is even else 'chat-message ai-response' }}"
+        >
+          {{ response }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="container" id="footer">
+    <div class="input-group mb-3">
+      <input
+        class="form-control"
+        placeholder="Add input here"
+        name="user_input"
+        rows="3"
+        id="userInput"
+      />
+      <button class="btn btn-outline-primary" type="submit" id="sendButton">
+        Send
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var websocketString = "";
+  if (window.location.hostname === "127.0.0.1") {
+    websocketString = "ws://localhost:8000/ws";
+  } else {
+    websocketString = `wss://${window.location.hostname}/ws`;
+  }
+
+  var ws = new WebSocket(websocketString);
+
+  var sendButton = document.getElementById("sendButton");
+  var userInput = document.getElementById("userInput");
+  var chatHistory = document.getElementById("chatHistory");
+  var lastUserMessageDiv = null; // keep track of the last user message div
+  var isNewUserInput = true; // flag to track when a new user input happens
+
+  ws.onmessage = function (event) {
+    var message = event.data.trim(); // trim whitespace from the message
+
+    // Check if it's a continuation of the AI's last message or a new one
+    if (lastUserMessageDiv && !isNewUserInput) {
+      var shouldAddSpace = true;
+      var noPrependSpaceChars = [",", ".", "!", "?", ";", ":", "'"];
+
+      if (noPrependSpaceChars.includes(message.charAt(0))) {
+        shouldAddSpace = false;
+      }
+
+      lastUserMessageDiv.textContent += (shouldAddSpace ? " " : "") + message;
+    } else {
+      // it's either a new user input or the first chunk of AI response for the latest input
+      var messageDiv = document.createElement("div");
+      messageDiv.className = "chat-message ai-response";
+      messageDiv.textContent = message;
+      chatHistory.appendChild(messageDiv);
+      lastUserMessageDiv = messageDiv;
+      isNewUserInput = false;
+    }
+  };
+
+  sendButton.onclick = function () {
+    var message = userInput.value.trim();
+    if (message) {
+      var userInputDiv = document.createElement("div");
+      userInputDiv.className = "chat-message user-input";
+      userInputDiv.textContent = message;
+      chatHistory.appendChild(userInputDiv);
+
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+      ws.send(message);
+      userInput.value = ""; //Clear input field after sending
+      isNewUserInput = true; // Set the flag as it's a new user input
+      lastUserMessageDiv = null; // Prepare for the next message
+    }
+  };
+</script>

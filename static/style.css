@@ -1,0 +1,33 @@
+.chat-history {
+  text-align: left;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.chat-message {
+  width: fit-content;
+  word-wrap: break-word;
+}
+
+.chat-message.user-input {
+  background-color: #d0eaff; /* Light blue background */
+  text-align: left;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 8px;
+}
+
+.chat-message.ai-response {
+  background-color: #f1f1f1; /* Light grey background */
+  text-align: left;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 8px;
+}
+
+#footer {
+  position: fixed;
+  bottom: 3%;
+  width: 95%;
+}

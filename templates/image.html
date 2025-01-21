@@ -1,0 +1,25 @@
+{% include 'layout.html' %}
+
+<div class="container mt-5">
+  <h3>Add input to generate images from a personal Chatbot</h3>
+  <div>
+    <div class="card text-center mt-3">
+      <div class="card-header">Image generation</div>
+      <div class="card-body">
+        <div>
+          <img src="{{image_url}}" alt="image" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <form class="container" id="footer" action="/image" method="POST">
+    <div class="input-group mb-3">
+      <input
+        class="form-control"
+        placeholder="Add input here"
+        name="user_input"
+      />
+      <button class="btn btn-outline-primary" type="submit">Send</button>
+    </div>
+  </form>
+</div>
