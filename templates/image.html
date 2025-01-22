@@ -1,13 +1,28 @@
 {% include 'layout.html' %}
 
 <div class="container mt-5">
-  <h3>Add input to generate images from a personal Chatbot</h3>
+  <h1 class="text-center text-white">
+    Generate images from a personal Chatbot
+  </h1>
   <div>
     <div class="card text-center mt-3">
       <div class="card-header">Image generation</div>
-      <div class="card-body">
+      <div class="card-body image-log">
         <div>
-          <img src="{{image_url}}" alt="image" />
+          {% if image_url %}
+          <img src="{{ image_url }}" alt="Generated Image" />
+          <div class="d-flex justify-content-center mt-3">
+            <a
+              href="{{ image_url }}"
+              download="{{ image_url }}"
+              class="btn btn-primary mt-3"
+            >
+              Download Image
+            </a>
+          </div>
+          {% else %}
+          <p>No image available. Please add an input to generate an image.</p>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -15,11 +30,11 @@
   <form class="container" id="footer" action="/image" method="POST">
     <div class="input-group mb-3">
       <input
-        class="form-control"
+        class="form-control input"
         placeholder="Add input here"
         name="user_input"
       />
-      <button class="btn btn-outline-primary" type="submit">Send</button>
+      <button class="btn btn-primary" type="submit">Send</button>
     </div>
   </form>
 </div>

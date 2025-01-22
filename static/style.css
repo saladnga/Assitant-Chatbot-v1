@@ -1,33 +1,67 @@
+.card {
+  background-color: rgba(27, 27, 27, 0.614);
+  color: white;
+  border-radius: 10px;
+}
+.card-body {
+  color: white;
+}
 .chat-history {
   text-align: left;
   width: 100%;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  height: 72vh;
 }
+
+.image-log {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 68vh;
+}
+
 .chat-message {
   width: fit-content;
   word-wrap: break-word;
 }
 
 .chat-message.user-input {
-  background-color: #d0eaff; /* Light blue background */
+  background-color: #025fff;
+  color: white;
   text-align: left;
-  border-radius: 5px;
-  padding: 5px;
+  border-radius: 10px;
+  padding: 10px;
   margin-bottom: 8px;
 }
 
 .chat-message.ai-response {
-  background-color: #f1f1f1; /* Light grey background */
+  background-color: #b0b0b077;
+  color: white;
   text-align: left;
-  border-radius: 5px;
-  padding: 5px;
-  margin-bottom: 8px;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 #footer {
   position: fixed;
   bottom: 3%;
-  width: 95%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
+.form-control.input {
+  background-color: #343a40;
+  color: white;
+  height: 50px;
+  border: 1px solid #444;
+  border-radius: 5px;
+}
+
+.form-control.input:focus {
+  outline: none;
+  box-shadow: none;
 }

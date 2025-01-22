@@ -1,10 +1,10 @@
 {% include 'layout.html' %}
 
 <div class="container mt-5">
-  <h3>Add input to chat with personal Chatbot</h3>
+  <h1 class="text-center text-white">Personal Chatbot</h1>
   <div>
     <div class="card text-center mt-3">
-      <div class="card-header">Chat History:</div>
+      <!-- <div class="card-header">Your Conversation</div> -->
       <div class="card-body chat-history" id="chatHistory">
         <!-- auto populate here-->
         {% for response in chat_responses %}
@@ -20,13 +20,13 @@
   <div class="container" id="footer">
     <div class="input-group mb-3">
       <input
-        class="form-control"
+        class="form-control input"
         placeholder="Add input here"
         name="user_input"
         rows="3"
         id="userInput"
       />
-      <button class="btn btn-outline-primary" type="submit" id="sendButton">
+      <button class="btn btn-primary" type="submit" id="sendButton">
         Send
       </button>
     </div>
@@ -34,6 +34,7 @@
 </div>
 
 <script>
+  const chatScroll = document.querySelector(".chat-history");
   var websocketString = "";
   if (window.location.hostname === "127.0.0.1") {
     websocketString = "ws://localhost:8000/ws";
@@ -71,6 +72,7 @@
       lastUserMessageDiv = messageDiv;
       isNewUserInput = false;
     }
+    chatScroll.scrollTop = chatHistory.scrollHeight;
   };
 
   sendButton.onclick = function () {
