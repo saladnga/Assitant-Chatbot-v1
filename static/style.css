@@ -26,6 +26,7 @@
 .chat-message {
   width: fit-content;
   word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .chat-message.user-input {

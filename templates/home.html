@@ -4,14 +4,12 @@
   <h1 class="text-center text-white">Personal Chatbot</h1>
   <div>
     <div class="card text-center mt-3">
-      <!-- <div class="card-header">Your Conversation</div> -->
       <div class="card-body chat-history" id="chatHistory">
-        <!-- auto populate here-->
         {% for response in chat_responses %}
         <div
           class="{{ 'chat-message user-input' if loop.index0 is even else 'chat-message ai-response' }}"
         >
-          {{ response }}
+          {{ response|safe }}
         </div>
         {% endfor %}
       </div>
@@ -47,24 +45,30 @@
   var sendButton = document.getElementById("sendButton");
   var userInput = document.getElementById("userInput");
   var chatHistory = document.getElementById("chatHistory");
-  var lastUserMessageDiv = null; // keep track of the last user message div
-  var isNewUserInput = true; // flag to track when a new user input happens
+  var lastUserMessageDiv = null;
+  var isNewUserInput = true;
 
   ws.onmessage = function (event) {
-    var message = event.data.trim(); // trim whitespace from the message
+    var message = event.data.trim();
 
-    // Check if it's a continuation of the AI's last message or a new one
     if (lastUserMessageDiv && !isNewUserInput) {
       var shouldAddSpace = true;
-      var noPrependSpaceChars = [",", ".", "!", "?", ";", ":", "'"];
+      var noPrependSpaceChars = [",", ".", "!", "?", ";", ":", "'", "-"];
 
       if (noPrependSpaceChars.includes(message.charAt(0))) {
         shouldAddSpace = false;
       }
 
+      // Fix common word splits and number formatting
+      // Regex to remove spaces between digits and between characters in words
+      message = message.replace(/(\d)\s+(\d)/g, "$1$2"); // Fix "201 8" to "2018"
+      message = message.replace(/([a-zA-Z])\s+([a-zA-Z])/g, "$1$2"); // Fix "Man u" to "Manu"
+
+      // Fix additional unwanted spaces by replacing multiple spaces with one
+      message = message.replace(/\s+/g, " ").trim(); // Normalize multiple spaces to one
+
       lastUserMessageDiv.textContent += (shouldAddSpace ? " " : "") + message;
     } else {
-      // it's either a new user input or the first chunk of AI response for the latest input
       var messageDiv = document.createElement("div");
       messageDiv.className = "chat-message ai-response";
       messageDiv.textContent = message;
@@ -72,6 +76,7 @@
       lastUserMessageDiv = messageDiv;
       isNewUserInput = false;
     }
+
     chatScroll.scrollTop = chatHistory.scrollHeight;
   };
 
@@ -85,9 +90,9 @@
 
       chatHistory.scrollTop = chatHistory.scrollHeight;
       ws.send(message);
-      userInput.value = ""; //Clear input field after sending
-      isNewUserInput = true; // Set the flag as it's a new user input
-      lastUserMessageDiv = null; // Prepare for the next message
+      userInput.value = "";
+      isNewUserInput = true;
+      lastUserMessageDiv = null;
     }
   };
 </script>
